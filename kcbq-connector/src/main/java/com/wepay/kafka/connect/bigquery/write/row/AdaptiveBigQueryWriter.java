@@ -94,6 +94,7 @@ public class AdaptiveBigQueryWriter extends BigQueryWriter {
         attemptSchemaUpdate(tableId, topic);
       }
     } catch (BigQueryException exception) {
+      logger.debug(exception.getMessage(), exception);
       if (isTableMissingSchema(exception)) {
         attemptSchemaUpdate(tableId, topic);
       } else {
