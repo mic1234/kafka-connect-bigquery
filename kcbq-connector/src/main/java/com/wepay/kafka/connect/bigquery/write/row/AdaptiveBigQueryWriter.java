@@ -105,12 +105,7 @@ public class AdaptiveBigQueryWriter extends BigQueryWriter {
     int attemptCount = 0;
     while (writeResponse == null || writeResponse.hasErrors()) {
       logger.trace("insertion failed");
-      for(Map.Entry<Long, List<BigQueryError>> e: writeResponse.getInsertErrors().entrySet()) {
-    	  logger.error(e.getKey()+"");
-    	  for(BigQueryError err: e.getValue()) {
-    		  logger.error(err.toString());
-    	  }
-      }
+      logger.trace(writeResponse.toString());
       if (writeResponse == null
           || onlyContainsInvalidSchemaErrors(writeResponse.getInsertErrors())) {
         try {
