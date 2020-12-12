@@ -24,7 +24,7 @@ import com.google.cloud.bigquery.BigQueryError;
 import com.google.cloud.bigquery.BigQueryException;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
-import com.google.cloud.bigquery.InsertAllRequest.RowToInsert;
+
 import com.wepay.kafka.connect.bigquery.SchemaManager;
 import com.wepay.kafka.connect.bigquery.exception.BigQueryConnectException;
 
@@ -33,7 +33,6 @@ import com.wepay.kafka.connect.bigquery.utils.PartitionedTableId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,23 +85,8 @@ public class AdaptiveBigQueryWriter extends BigQueryWriter {
     InsertAllRequest request = null;
 
     try {
-      request = createInsertAllRequest(tableId, rows);      
-      int done = 0;
-      List<RowToInsert> allRows = request.getRows();
-      
-      while(done < rows.size()) {
-    	  int counter = 0;
-    	  List<RowToInsert> batchRows = new ArrayList<>();
-    	  
-    	  while(counter < 9000) {
-    		  batchRows.add(rows.get(done));
-    		  done++;
-    		  counter++;
-    	  }
-    	  InsertAllRequest request1 = createInsertAllRequest(tableId, batchRows);
-    	  writeResponse = bigQuery.insertAll(request1);    	  
-      }
-      
+      request = createInsertAllRequest(tableId, rows);
+      writeResponse = bigQuery.insertAll(request);
       // Should only perform one schema update attempt; may have to continue insert attempts due to
       // BigQuery schema updates taking up to two minutes to take effect
       if (writeResponse.hasErrors()
