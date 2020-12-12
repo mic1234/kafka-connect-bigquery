@@ -125,12 +125,12 @@ public abstract class BigQueryWriter {
 						done++;
 						counter++;
 					}
-					insertErrors.putAll(failedRowsMap = performWriteRequest(table, batchRows, topic));
+					performWriteRequest(table, batchRows, topic);
 					logger.debug("Written " + batchRows.size() + " records to Bigquery.");
 					batchRows.clear();
 				}
 				// failedRowsMap = performWriteRequest(table, rows, topic);
-				failedRowsMap = insertErrors;
+				failedRowsMap = new HashMap<>();
 				// failedRowsMap = performWriteRequest(table, rows, topic);
 				if (failedRowsMap.isEmpty()) {
 					// table insertion completed with no reported errors
