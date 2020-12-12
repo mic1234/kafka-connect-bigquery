@@ -94,15 +94,13 @@ public class AdaptiveBigQueryWriter extends BigQueryWriter {
     	  int counter = 0;
     	  List<RowToInsert> batchRows = new ArrayList<>();
     	  
-    	  while(counter < 9000 && done < rows.size()) {
+    	  while(counter < 9000) {
     		  batchRows.add(rows.get(done));
     		  done++;
     		  counter++;
-    	  }    	  
+    	  }
     	  InsertAllRequest request1 = createInsertAllRequest(tableId, batchRows);
-    	  writeResponse = bigQuery.insertAll(request1);
-    	  logger.debug("Written "+batchRows.size()+" records to Bigquery.");
-    	  batchRows.clear();
+    	  writeResponse = bigQuery.insertAll(request1);    	  
       }
       
       // Should only perform one schema update attempt; may have to continue insert attempts due to
